@@ -33,7 +33,7 @@ THEMES = {
   "sunset" => {
     body: "bg-orange-100 text-orange-900",
     container: "bg-orange-50",
-    input: "bg-white border-orange-400 ring-orange-200 text-orange-900",
+    input: "bg-white border-orange-400 ring-orange-200 text-orange-900 focus-visible:border-orange-400",
     todo: "bg-orange-200 text-orange-900",
     button: "bg-orange-600 text-white"
   }
