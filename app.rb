@@ -10,32 +10,16 @@ end
 
 THEMES = {
   "light" => {
-    body: "bg-blue-100 text-gray-800",
-    container: "bg-white",
-    input: "bg-white border-gray-300 ring-blue-100 text-black",
-    todo: "bg-gray-50 text-black",
-    button: "bg-blue-600 text-white"
+    body: "bg-white text-slate-900",
+    input: "bg-white border-slate-300 placeholder:text-slate-400 text-slate-900",
+    todo: "bg-slate-50 text-slate-900",
+    button: "bg-slate-800 text-slate-50"
   },
   "dark" => {
-    body: "bg-gray-900 text-white",
-    container: "bg-gray-800",
-    input: "bg-gray-700 border-gray-600 ring-blue-500/40 text-white",
-    todo: "bg-gray-700 text-white",
-    button: "bg-green-600 text-white"
-  },
-  "forest" => {
-    body: "bg-green-100 text-green-900",
-    container: "bg-green-50",
-    input: "bg-white border-green-400 ring-green-200 text-green-900",
-    todo: "bg-green-200 text-green-900",
-    button: "bg-green-600 text-white"
-  },
-  "sunset" => {
-    body: "bg-orange-100 text-orange-900",
-    container: "bg-orange-50",
-    input: "bg-white border-orange-400 ring-orange-200 text-orange-900 focus-visible:border-orange-400",
-    todo: "bg-orange-200 text-orange-900",
-    button: "bg-orange-600 text-white"
+    body: "bg-slate-900 text-slate-50",
+    input: "bg-slate-700 border-slate-600 placeholder:text-slate-500 text-slate-50",
+    todo: "bg-slate-700 text-slate-50",
+    button: "bg-slate-50 text-slate-800"
   }
 }
 
