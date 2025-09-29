@@ -8,17 +8,18 @@ configure do
   set :session_secret, SecureRandom.hex(64)
 end
 
+# デフォルトテーマ
 THEMES = {
   "light" => {
     body: "bg-white text-slate-900",
-    input: "bg-white border-slate-300 placeholder:text-slate-400 text-slate-900",
-    todo: "bg-slate-50 text-slate-900",
+    input: "bg-white border-slate-300 placeholder:text-slate-400",
+    todo: "bg-slate-100",
     button: "bg-slate-800 text-slate-50"
   },
   "dark" => {
-    body: "bg-slate-900 text-slate-50",
+    body: "bg-slate-900 text-white",
     input: "bg-slate-700 border-slate-600 placeholder:text-slate-500 text-slate-50",
-    todo: "bg-slate-700 text-slate-50",
+    todo: "bg-slate-700",
     button: "bg-slate-50 text-slate-800"
   }
 }
@@ -34,6 +35,17 @@ helpers do
 
   def theme_classes
     THEMES[theme] || THEMES["light"]
+  end
+
+  # Editモード（グローバル）
+  def edit_mode?
+    session[:edit_mode] ||= false
+  end
+
+  # Edit用テーマ
+  def edit_theme(theme_name)
+    session[:edit_themes] ||= {}
+    session[:edit_themes][theme_name] ||= THEMES[theme_name].dup
   end
 end
 
@@ -59,10 +71,33 @@ post '/delete/:id' do
   redirect '/'
 end
 
-# テーマ切り替え
+# テーマ切替
 post '/theme/:name' do
   if THEMES.keys.include?(params[:name])
     session[:theme] = params[:name]
+  end
+  redirect '/'
+end
+
+# Editモード切替（グローバル）
+post '/edit_mode' do
+  session[:edit_mode] = !edit_mode?
+
+  # 初期値をコピー（まだ保存されていない場合）
+  session[:edit_themes] ||= {}
+  THEMES.each_key do |theme_name|
+    session[:edit_themes][theme_name] ||= THEMES[theme_name].dup
+  end
+
+  redirect '/'
+end
+
+# テーマ編集保存
+post '/update_theme/:theme_name' do
+  theme_name = params[:theme_name]
+  params[:classes].each do |key, value|
+    session[:edit_themes][theme_name][key] = value.strip
+    THEMES[theme_name][key] = value.strip
   end
   redirect '/'
 end
