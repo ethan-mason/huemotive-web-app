@@ -12,10 +12,10 @@
 
     <!-- ヘッダー -->
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-semibold">Scribbler</h1>
+      <h1 class="text-2xl font-bold">Scribbler</h1>
       <form action="/edit_mode" method="post">
       <button class="px-3 py-1 rounded-full text-sm
-      <%= theme == 'light' ? 'bg-slate-200 text-slate-600' : 'bg-slate-600 text-slate-200' %>">
+      <%= theme == 'light' ? 'bg-slate-200 text-slate-700' : 'bg-slate-700 text-slate-200' %>">
       Edit
       </button>
       </form>
@@ -60,7 +60,7 @@
     <form action="/add" method="post" class="flex mb-6 gap-2">
       <input type="text" name="content" placeholder="やることを入力"
         class="flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-1 focus:ring-blue-400 <%= theme_classes[:input] %>">
-      <button type="submit" class="px-4 py-2 rounded-full font-semibold <%= theme_classes[:button] %>">
+      <button type="submit" class="px-4 py-2 rounded-full font-bold <%= theme_classes[:button] %>">
         追加
       </button>
     </form>
@@ -68,10 +68,10 @@
     <!-- Todoリスト -->
     <ul class="space-y-3">
       <% todos.each do |todo| %>
-        <li class="flex justify-between items-center px-4 py-3 rounded-lg shadow-sm <%= theme_classes[:todo] %>">
+        <li class="flex justify-between items-center px-4 py-2 rounded-lg shadow-sm <%= theme_classes[:todo] %>">
           <span class="break-words"><%= todo[:content] %></span>
           <form action="/delete/<%= todo[:id] %>" method="post">
-            <button type="submit" class="px-2 text-sm py-1 text-red-400 font-semibold rounded-full hover:bg-red-200 duration-200">
+            <button type="submit" class="px-2 text-sm py-1 text-red-400 font-bold rounded-full hover:bg-red-200 duration-200">
               削除
             </button>
           </form>
