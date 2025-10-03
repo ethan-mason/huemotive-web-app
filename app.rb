@@ -11,13 +11,13 @@ end
 # デフォルトテーマ
 THEMES = {
   "light" => {
-    body: "bg-white text-slate-900",
+    body: "bg-white text-slate-800",
     input: "bg-white border-slate-300 placeholder:text-slate-400",
     todo: "bg-slate-100",
     button: "bg-slate-800 text-slate-50"
   },
   "dark" => {
-    body: "bg-slate-900 text-white",
+    body: "bg-slate-800 text-white",
     input: "bg-slate-700 border-slate-600 placeholder:text-slate-500 text-slate-50",
     todo: "bg-slate-700",
     button: "bg-slate-50 text-slate-800"
