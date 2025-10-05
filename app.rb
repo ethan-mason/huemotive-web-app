@@ -4,6 +4,13 @@ require 'sinatra/reloader' if development?
 set :public_folder, 'public'
 set :views, 'views'
 
+helpers do
+  # ERBの部分テンプレートを呼び出すヘルパー
+  def partial(template, locals = {})
+    erb("_#{template}".to_sym, locals: locals)
+  end
+end
+
 todos = []
 
 get '/' do
