@@ -1,5 +1,7 @@
-/* ベースCSS（必要最低限） */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap');
+
 html, body {
+    font-family: "Bricolage Grotesque";
     margin: 0;
     padding: 0;
 }
