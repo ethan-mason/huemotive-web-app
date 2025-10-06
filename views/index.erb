@@ -11,9 +11,37 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="/style.css">
   <style>
-    :root {
-      --main: #007bff;
-      --rounded: 0.5rem; /* Tailwind lg 相当 */
+    /* スライダーのカスタムデザイン */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 6rem;
+      height: 0.5rem;
+      background: #e5e7eb; /* gray-200 */
+      border-radius: 9999px; /* 丸み */
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 1.25rem; /* 20px */
+      height: 1.25rem;
+      background: var(--main);
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 1.25rem;
+      height: 1.25rem;
+      background: var(--main);
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
     }
   </style>
 </head>
@@ -26,7 +54,7 @@
       <img src="/logo.svg" alt="Logo" class="h-7">
       <div class="flex items-center gap-2">
         <label for="roundedRange" class="text-sm text-gray-600">Rounded:</label>
-        <input type="range" min="0" max="32" value="8" id="roundedRange" class="w-24">
+        <input type="range" min="0" max="32" value="8" id="roundedRange">
       </div>
     </div>
   </header>
@@ -62,21 +90,23 @@
       <% else %>
         <ul id="todoList" class="space-y-2">
           <% @todos.each_with_index do |todo, i| %>
-            <li class="group flex justify-between items-center bg-white border px-5 py-3 hover:bg-gray-50 transition-colors rounded-[var(--rounded)]">
-              <div class="flex items-center gap-3 flex-1">
-                <input
-                  type="checkbox"
-                  class="task-checkbox accent-main w-4 h-4 cursor-pointer rounded-sm"
-                  id="todo-<%= i %>"
-                >
-                <label
-                  for="todo-<%= i %>"
-                  class="text-sm font-medium text-gray-700 truncate cursor-pointer group-hover:text-gray-900 transition-colors"
-                >
-                  <%= todo %>
-                </label>
+            <li class="group flex justify-between items-start bg-white border px-5 py-3 hover:bg-gray-50 transition-colors rounded-[var(--rounded)]">
+              <div class="flex flex-col gap-2 flex-1">
+                <div class="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    class="task-checkbox accent-main w-4 h-4 cursor-pointer rounded-sm mt-1"
+                    id="todo-<%= i %>"
+                  >
+                  <label
+                    for="todo-<%= i %>"
+                    class="text-sm font-medium text-gray-700 break-words whitespace-normal cursor-pointer group-hover:text-gray-900 transition-colors"
+                  >
+                    <%= todo %>
+                  </label>
+                </div>
               </div>
-              <form action="/delete" method="post" class="ml-3">
+              <form action="/delete" method="post" class="ml-3 mt-1">
                 <input type="hidden" name="index" value="<%= i %>">
                 <button
                   type="submit"
@@ -150,7 +180,7 @@
     // ✅ Task checkbox line-through
     document.addEventListener("change", e => {
       if (e.target.classList.contains("task-checkbox")) {
-        const label = e.target.nextElementSibling;
+        const label = e.target.closest('div').querySelector('label');
         label.classList.toggle("line-through", e.target.checked);
         label.classList.toggle("text-gray-400", e.target.checked);
       }
