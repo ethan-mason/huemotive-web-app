@@ -12,47 +12,65 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 
-<body class="bg-bg text-gray-800 flex flex-col min-h-screen">
+<body class="min-h-screen flex flex-col items-center text-gray-800 bg-[radial-gradient(ellipse_at_top_left,rgba(0,123,255,0.03),rgba(255,255,255,0.9))] transition-colors duration-700">
 
-  <%= partial :header %>
+  <!-- 🧭 Header -->
+  <header class="w-full flex justify-center py-8 px-4 md:px-0">
+    <div class="w-full max-w-md flex items-center">
+      <img src="/logo.svg" alt="Logo" class="h-7">
+    </div>
+  </header>
 
-  <main class="flex-1 flex flex-col items-center justify-start px-4 md:px-0 py-6 md:py-8">
-    <div class="w-full max-w-md">
-      <div class="flex justify-center gap-3 mb-6">
-        <button class="w-6 h-6 rounded-full border border-gray-200 bg-[#007bff]" data-color="#007bff"></button>
-        <button class="w-6 h-6 rounded-full border border-gray-200 bg-[#22c55e]" data-color="#22c55e"></button>
-        <button class="w-6 h-6 rounded-full border border-gray-200 bg-[#ec4899]" data-color="#ec4899"></button>
-        <button class="w-6 h-6 rounded-full border border-gray-200 bg-[#f97316]" data-color="#f97316"></button>
-        <button class="w-6 h-6 rounded-full border border-gray-200 bg-[#6366f1]" data-color="#6366f1"></button>
+  <!-- 🌈 Main -->
+  <main class="w-full max-w-md flex-1 flex flex-col items-center px-4 md:px-0 pb-20 space-y-10">
+
+    <!-- 🎨 Theme color picker -->
+    <section class="w-full flex justify-center">
+      <div id="colorPalette" class="flex gap-4">
+        <% colors = [
+          { hex: "#007bff", name: "Blue" },
+          { hex: "#22c55e", name: "Green" },
+          { hex: "#f97316", name: "Orange" },
+          { hex: "#ec4899", name: "Pink" },
+          { hex: "#6366f1", name: "Indigo" }
+        ] %>
+
+        <% colors.each do |color| %>
+          <button
+            class="relative w-8 h-8 rounded-full border border-gray-200 bg-white/90 hover:scale-105 hover:brightness-110 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 <%= 'ring-2 ring-main ring-offset-2' if color[:hex] == '#007bff' %>"
+            data-color="<%= color[:hex] %>"
+            style="background: <%= color[:hex] %>;"
+          ></button>
+        <% end %>
       </div>
-      <form action="/add" method="post" class="flex mb-6">
-        <input
-          type="text"
-          name="content"
-          placeholder="Enter a task..."
-          required
-          class="h-10 flex-1 border border-gray-200 rounded-l-lg rounded-r-none px-4 py-2 placeholder:text-sm outline-none"
-        >
-        <button
-          type="submit"
-          class="bg-main text-white px-4 py-2 rounded-r-lg hover:bg-accent transition font-medium"
-        >
-          Add
-        </button>
-      </form>
+    </section>
 
+    <!-- ✅ Task list -->
+    <section class="w-full">
       <% if @todos.empty? %>
-        <p class="text-center text-gray-400 text-lg py-4">No tasks yet.</p>
+        <p class="text-center text-gray-400 text-base py-8">No tasks yet.</p>
       <% else %>
-        <ul class="space-y-3">
+        <ul id="todoList" class="space-y-2">
           <% @todos.each_with_index do |todo, i| %>
-            <li class="flex justify-between items-center bg-card border border-gray-200 rounded-xl px-4 py-3 hover:bg-gray-100 transition">
-              <span class="truncate text-sm"><%= todo %></span>
+            <li class="group flex justify-between items-center bg-white border rounded-lg px-5 py-3 hover:bg-gray-50 transition-colors">
+              <div class="flex items-center gap-3 flex-1">
+                <input
+                  type="checkbox"
+                  class="task-checkbox accent-main w-4 h-4 cursor-pointer rounded-sm"
+                  id="todo-<%= i %>"
+                >
+                <label
+                  for="todo-<%= i %>"
+                  class="text-sm font-medium text-gray-700 truncate cursor-pointer group-hover:text-gray-900 transition-colors"
+                >
+                  <%= todo %>
+                </label>
+              </div>
               <form action="/delete" method="post" class="ml-3">
                 <input type="hidden" name="index" value="<%= i %>">
                 <button
                   type="submit"
-                  class="text-xs bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
+                  class="text-xs text-red-500 hover:text-red-600 transition font-medium"
                 >
                   Delete
                 </button>
@@ -61,10 +79,101 @@
           <% end %>
         </ul>
       <% end %>
-    </div>
+    </section>
   </main>
 
-  <%= partial :footer %>
+  <!-- 🎯 Floating button -->
+  <button
+    id="openModalBtn"
+    class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-main text-white px-6 py-3 rounded-lg shadow-md hover:brightness-110 transition-all font-medium"
+  >
+    Add a new task
+  </button>
 
+  <!-- 🪟 Modal -->
+  <div id="taskModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
+    <div class="bg-white rounded-xl shadow-xl w-11/12 max-w-md p-6 relative border border-gray-100">
+      <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-lg">✕</button>
+      <h2 class="text-lg font-semibold mb-4 text-center">Add a New Task</h2>
+      <form action="/add" method="post" class="flex flex-col gap-4">
+        <input
+          type="text"
+          name="content"
+          placeholder="Enter your task..."
+          required
+          class="border border-gray-200 rounded-md px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-main"
+        >
+        <div class="flex justify-end gap-3">
+          <button
+            type="button"
+            id="cancelBtn"
+            class="px-4 py-2 text-sm rounded-md border border-gray-300 hover:bg-gray-50 transition"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="bg-main text-white px-4 py-2 text-sm rounded-md hover:brightness-110 transition font-medium"
+          >
+            Add
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ⚙️ Scripts -->
+  <script>
+    const modal = document.getElementById("taskModal");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const body = document.body;
+    const palette = document.getElementById("colorPalette");
+
+    // 🪟 Modal control
+    openModalBtn.addEventListener("click", () => modal.classList.replace("hidden", "flex"));
+    [closeModalBtn, cancelBtn].forEach(btn => btn.addEventListener("click", () => modal.classList.add("hidden")));
+    modal.addEventListener("click", e => { if (e.target === modal) modal.classList.add("hidden"); });
+
+    // ✅ Task checkbox line-through
+    document.addEventListener("change", e => {
+      if (e.target.classList.contains("task-checkbox")) {
+        const label = e.target.nextElementSibling;
+        label.classList.toggle("line-through", e.target.checked);
+        label.classList.toggle("text-gray-400", e.target.checked);
+      }
+    });
+
+    // 🌈 Dynamic gradient background
+    let currentColor = "#007bff";
+    document.documentElement.style.setProperty("--main", currentColor);
+    body.style.background = gradientMood(currentColor);
+
+    palette.addEventListener("click", (e) => {
+      const button = e.target.closest("button");
+      if (!button) return;
+      palette.querySelectorAll("button").forEach(b => b.classList.remove("ring-2", "ring-main", "ring-offset-2"));
+      button.classList.add("ring-2", "ring-main", "ring-offset-2");
+
+      currentColor = button.dataset.color;
+      document.documentElement.style.setProperty("--main", currentColor);
+      body.style.background = gradientMood(currentColor);
+    });
+
+    function gradientMood(hex) {
+      const light = hexToRgba(hex, 0.02);
+      const mid   = hexToRgba(hex, 0.03);
+      const deep  = hexToRgba(hex, 0.04);
+      return `radial-gradient(ellipse at top left, ${light}, ${mid}, ${deep})`;
+    }
+
+    function hexToRgba(hex, alpha) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+  </script>
 </body>
 </html>
