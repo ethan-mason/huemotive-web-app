@@ -10,14 +10,24 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="/style.css">
+  <style>
+    :root {
+      --main: #007bff;
+      --rounded: 0.5rem;
+    }
+  </style>
 </head>
 
 <body class="min-h-screen flex flex-col items-center text-gray-800 bg-[radial-gradient(ellipse_at_top_left,rgba(0,123,255,0.03),rgba(255,255,255,0.9))] transition-colors duration-700">
 
   <!-- 🧭 Header -->
-  <header class="w-full flex justify-center py-8 px-4 md:px-0">
-    <div class="w-full max-w-md flex items-center">
+  <header class="w-full flex flex-col items-center py-8 px-4 md:px-0 space-y-4">
+    <div class="w-full max-w-md flex items-center justify-between">
       <img src="/logo.svg" alt="Logo" class="h-7">
+      <div class="flex items-center gap-2">
+        <label for="roundedRange" class="text-sm text-gray-600">Rounded:</label>
+        <input type="range" min="0" max="32" value="8" id="roundedRange" class="w-24">
+      </div>
     </div>
   </header>
 
@@ -52,7 +62,7 @@
       <% else %>
         <ul id="todoList" class="space-y-2">
           <% @todos.each_with_index do |todo, i| %>
-            <li class="group flex justify-between items-center bg-white border rounded-lg px-5 py-3 hover:bg-gray-50 transition-colors">
+            <li class="group flex justify-between items-center bg-white border px-5 py-3 hover:bg-gray-50 transition-colors rounded-[var(--rounded)]">
               <div class="flex items-center gap-3 flex-1">
                 <input
                   type="checkbox"
@@ -85,14 +95,14 @@
   <!-- 🎯 Floating button -->
   <button
     id="openModalBtn"
-    class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-main text-white px-6 py-3 rounded-lg shadow-md hover:brightness-110 transition-all font-medium"
+    class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-main text-white px-6 py-3 shadow-md hover:brightness-110 transition-all font-medium rounded-[var(--rounded)]"
   >
     Add a new task
   </button>
 
   <!-- 🪟 Modal -->
   <div id="taskModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
-    <div class="bg-white rounded-xl shadow-xl w-11/12 max-w-md p-6 relative border border-gray-100">
+    <div class="bg-white shadow-xl w-11/12 max-w-md p-6 relative border border-gray-100 rounded-[var(--rounded)]">
       <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-lg">✕</button>
       <h2 class="text-lg font-semibold mb-4 text-center">Add a New Task</h2>
       <form action="/add" method="post" class="flex flex-col gap-4">
@@ -101,19 +111,19 @@
           name="content"
           placeholder="Enter your task..."
           required
-          class="border border-gray-200 rounded-md px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-main"
+          class="border border-gray-200 rounded-[var(--rounded)] px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-main"
         >
         <div class="flex justify-end gap-3">
           <button
             type="button"
             id="cancelBtn"
-            class="px-4 py-2 text-sm rounded-md border border-gray-300 hover:bg-gray-50 transition"
+            class="px-4 py-2 text-sm border border-gray-300 hover:bg-gray-50 transition rounded-[var(--rounded)]"
           >
             Cancel
           </button>
           <button
             type="submit"
-            class="bg-main text-white px-4 py-2 text-sm rounded-md hover:brightness-110 transition font-medium"
+            class="bg-main text-white px-4 py-2 text-sm hover:brightness-110 transition font-medium rounded-[var(--rounded)]"
           >
             Add
           </button>
@@ -130,6 +140,7 @@
     const cancelBtn = document.getElementById("cancelBtn");
     const body = document.body;
     const palette = document.getElementById("colorPalette");
+    const roundedRange = document.getElementById("roundedRange");
 
     // 🪟 Modal control
     openModalBtn.addEventListener("click", () => modal.classList.replace("hidden", "flex"));
@@ -174,6 +185,11 @@
       const b = parseInt(hex.slice(5, 7), 16);
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
+
+    // 🔹 Rounded control
+    roundedRange.addEventListener("input", e => {
+      document.documentElement.style.setProperty("--rounded", `${e.target.value}px`);
+    });
   </script>
 </body>
 </html>
