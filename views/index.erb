@@ -13,7 +13,7 @@
   <style>
     :root {
       --main: #007bff;
-      --rounded: 0.5rem;
+      --rounded: 0.5rem; /* Tailwind lg 相当 */
     }
   </style>
 </head>
@@ -190,6 +190,9 @@
     roundedRange.addEventListener("input", e => {
       document.documentElement.style.setProperty("--rounded", `${e.target.value}px`);
     });
+
+    // 初期値反映
+    document.documentElement.style.setProperty("--rounded", `${roundedRange.value}px`);
   </script>
 </body>
 </html>
