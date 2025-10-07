@@ -2,7 +2,7 @@ tailwind.config = {
     theme: {
         extend: {
             colors: {
-                main: 'var(--main-color)',
+                main: 'var(--main)',
                 bg: '#f9fafb',
                 card: '#ffffff',
                 accent: '#93c5fd'
